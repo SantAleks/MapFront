@@ -15,6 +15,7 @@ Backend:
 •	Hibernate/Spring Data. 
 •	БД Oracle XE 11.
 •	Gradle для сборки
+
 •	Spring Boot для запуска
 Web-приложение:
 •	Java 7/8

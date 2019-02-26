@@ -6,6 +6,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 //import ru.javastudy.gwtApp.shared.FieldValidator;
@@ -26,18 +27,20 @@ public class GTWClient implements EntryPoint {
     final Label sendToServerLabel = new Label();
     final Button closeButton = new Button("Close");
 
-    //private final GwtServiceIntfAsync gwtAppService = GWT.create(GwtServiceIntf.class);
-    private final GwtServiceIntf gwtAppService = GWT.create(GwtServiceIntf.class);
+    //private final GwtServiceIntf gwtAppService = GWT.create(GwtServiceIntf.class);
 
     /** This is the entry point method.*/
     public void onModuleLoad() {
+        RootPanel.get().add(new UIPanel());
+        //Window.alert("Hello, AJAX");
 
+/*
         helloLabel.setText("GwtApp Application hello world");
 
         final Label usernameLabel = new Label();
         usernameLabel.setText("Username: ");
         /*Связываем id='' на html странице с компонентами */
-        RootPanel.get("helloId").add(helloLabel);
+/*        RootPanel.get("helloId").add(helloLabel);
 
         RootPanel.get("usernameLabelId").add(usernameLabel);
         RootPanel.get("usernameId").add(nameField);
@@ -84,25 +87,20 @@ public class GTWClient implements EntryPoint {
                 confirmButton.setFocus(true);
             }
         });
-
+*/
     }
 
-
+/*
     private void sendInfoToServer() {
         //validate input text
         errorLabel.setText("");
         String nameToServer = nameField.getText();
-        /*if (!FieldValidator.isValidData(nameToServer)) { //отобразить ошибку на html странице
-            errorLabel.setText("Имя должно содержать больше трех символов");
-            return;
-        }*/
         sendToServerLabel.setText(nameToServer);
-        //sendToServerLabel.setText("Inside of mod load. rpcService = " + gwtAppService.toString()+ "  " + nameField.getText());
         confirmButton.setEnabled(false);
         serverResponseHtml.setText("");
-        //gwtAppService.gwtCallServer(nameToServer, new AsyncCallback<String>() {
+        UIContent uicRequest = new UIContent("Казахст", "ово","ВТБ");
 
-            gwtAppService.gwtCallServer(new UIContent("Банк", "Город"), new MethodCallback<ResponceState>() {
+        gwtAppService.gwtCallServer(uicRequest, new MethodCallback<ResponceState>() {
             @Override
             public void onFailure(final Method method, final Throwable exception) {
                 dialogBox.setText("Remote Procedure Call - Failure");
@@ -118,29 +116,11 @@ public class GTWClient implements EntryPoint {
             public void onSuccess(final Method method, final ResponceState result) {
                 dialogBox.setText("Remote Procedure Call");
                 serverResponseHtml.removeStyleName("serverResponseLabelError");
-                serverResponseHtml.setHTML(result.getBank()[0]);
+                serverResponseHtml.setHTML(result.getBanks()[0]);
                 dialogBox.center();
                 closeButton.setFocus(true);
             }
         });
-/*        gwtAppService.gwtCallServer("111111111", new AsyncCallback<String>() {
-            public void onFailure(Throwable caught) {
-                dialogBox.setText("Remote Procedure Call - Failure");
-                serverResponseHtml.addStyleName("serverResponseLabelError");
-                serverResponseHtml.setHTML("ERROR ON SERVER");
-                dialogBox.center();
-                closeButton.setFocus(true);
-            }
-            public void onSuccess(String result) {
-                dialogBox.setText("Remote Procedure Call");
-                serverResponseHtml.removeStyleName("serverResponseLabelError");
-                serverResponseHtml.setHTML(result);
-                dialogBox.center();
-                closeButton.setFocus(true);
-            }
-        });
-        */
-
-    }
+    }*/
 
 }

@@ -1,0 +1,35 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .pretty { color: magenta; background-color: Skyblue; margin: 2px}
+        .second { color: red; background-color: darkcyan; margin: 2px}
+        .third { color: green; background-color: darkorchid; margin: 2px}
+        .label { color: magenta; background-color: Skyblue;
+            margin-bottom : 2px; margin-top : 10px; margin-left : 2px; margin-right : 2px}
+        .suggestBox { color: magenta; background-color: Skyblue; margin: 2px}
+    </ui:style>
+    <g:HTMLPanel>
+        Hello,
+        <g:HorizontalPanel ui:field="topHorizontalPanel" width="100%">
+            <g:VerticalPanel ui:field="srchVerticalPanel" styleName="{style.third}" width="100%">
+                <g:Label text="Страна:" styleName="{style.label}"/>
+                <g:SuggestBox ui:field="sbCountry"  styleName="{style.suggestBox}"/>
+                <g:Label text="Город:" styleName="{style.label}"/>
+                <g:SuggestBox ui:field="sbCity"  styleName="{style.suggestBox}"/>
+                <g:Label text="Банк:" styleName="{style.label}"/>
+                <g:SuggestBox ui:field="sbBank"  styleName="{style.suggestBox}"/>
+                <g:Label text="Найденые пункты:" styleName="{style.label}"/>
+                <g:Grid ui:field="gPoint"/>
+
+                <g:TextBox ui:field="mapTextBox" styleName="{style.pretty}"/>
+                <g:Label text="MAP1" styleName="{style.pretty}"/>
+                <g:Label text="MAP2" styleName="{style.pretty}"/>
+
+
+            </g:VerticalPanel>
+            <g:Label text="MAP" styleName="{style.second}"/>
+            <g:Label ui:field="web" styleName="{style.second}"/>
+            <g:Button ui:field="wButton" text="Кнопка" styleName="{style.second}"/>
+        </g:HorizontalPanel>
+    </g:HTMLPanel>
+</ui:UiBinder>

@@ -15,6 +15,7 @@ public class MapfrontApplication {
     public static void main(String[] args) {
         SpringApplication.run(MapfrontApplication.class, args);
         System.out.println("_________Start________");
+        /*
         final String uri1 = "http://127.0.0.1:8090/map?co=&ci=&ba=ВТБ&fc=co";
         final String uri2 = "http://127.0.0.1:8090/map?co=Казахст&ci=ово&ba=ВТБ&fc=co";
         RestTemplate restTemplate = new RestTemplate();
@@ -58,6 +59,7 @@ public class MapfrontApplication {
 
 
         System.out.println(result);
+        */
     }
 
 }

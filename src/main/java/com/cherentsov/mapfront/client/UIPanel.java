@@ -1,8 +1,11 @@
 package com.cherentsov.mapfront.client;
 
+import com.cherentsov.mapfront.shared.PointEntity;
 import com.cherentsov.mapfront.shared.ResponceState;
 import com.cherentsov.mapfront.shared.UIContent;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -19,11 +22,15 @@ public class UIPanel extends Composite {
     @UiField
     VerticalPanel srchVerticalPanel;
     @UiField
+    VerticalPanel srchVerticalPanelPoint;
+    /*
+    @UiField
     TextBox mapTextBox;
     @UiField
     Label web;
     @UiField
     Button wButton;
+    */
     @UiField
     SuggestBox sbCountry;
     @UiField
@@ -32,6 +39,9 @@ public class UIPanel extends Composite {
     SuggestBox sbBank;
     @UiField
     Grid gPoint;
+    @UiField MyStyle style;
+
+    private int selectIndexGrid = -1;
 
     private final GwtServiceIntf gwtAppService = GWT.create(GwtServiceIntf.class);
 
@@ -41,13 +51,44 @@ public class UIPanel extends Composite {
     interface UIPanelUiBinder extends UiBinder<HTMLPanel, UIPanel> {
     }
 
+    interface MyStyle extends CssResource {
+        //String enabled();
+        //String disabled();
+
+        String pretty();
+
+        String third();
+
+        String suggestBox();
+
+        String grid();
+
+        @ClassName("tableCell-even")
+        String tableCellEven();
+
+        String label();
+
+        @ClassName("tableCell-odd")
+        String tableCellOdd();
+
+        String panel();
+
+        String second();
+
+        @ClassName("tableCell-cap")
+        String tableCellCap();
+
+        @ClassName("tableCell-select")
+        String tableCellSelect();
+    }
+
     private static UIPanelUiBinder ourUiBinder = GWT.create(UIPanelUiBinder.class);
 
     public UIPanel() {
         initWidget(ourUiBinder.createAndBindUi(this));
 
-        web.setText("dfgfdgfgdffd");
-        mapTextBox.getElement().setAttribute("placeholder", "Add a todo item");
+        //web.setText("dfgfdgfgdffd");
+        //mapTextBox.getElement().setAttribute("placeholder", "Add a todo item");
 
         sbCountry.addKeyUpHandler(event -> {
             if (uIContent.getCountry() != sbCountry.getValue()){
@@ -57,7 +98,20 @@ public class UIPanel extends Composite {
             }
         });
 
+        sbCountry.addSelectionHandler(event -> {
+            if (uIContent.getCountry() != sbCountry.getValue()){
+                uIContent.setCountry(sbCountry.getValue());
+                sendInfoToServer("Country");
+            }
+        });
+
         sbCity.addKeyUpHandler(event -> {
+            if (uIContent.getCity() != sbCity.getValue()){
+                uIContent.setCity(sbCity.getValue());
+                sendInfoToServer("City");
+            }
+        });
+        sbCity.addSelectionHandler(event -> {
             if (uIContent.getCity() != sbCity.getValue()){
                 uIContent.setCity(sbCity.getValue());
                 sendInfoToServer("City");
@@ -71,9 +125,27 @@ public class UIPanel extends Composite {
             }
         });
 
-        wButton.addClickHandler(event -> {
-            web.setText("!!!!!!!!!!!!!");
+        sbBank.addSelectionHandler(event -> {
+            if (uIContent.getBank() != sbBank.getValue()){
+                uIContent.setBank(sbBank.getValue());
+                sendInfoToServer("Bank");
+            }
         });
+
+
+
+        gPoint.addClickHandler(event -> {
+            selectIndexGrid = gPoint.getCellForEvent(event).getRowIndex();
+            drawGrid();
+
+            //gPoint.getCellForEvent(event);
+            //Window.alert("getX: " + event.getX() + " getClientX: " + gPoint.getCellForEvent(event).getRowIndex());
+
+        });
+
+        //wButton.addClickHandler(event -> {
+        //    web.setText("!!!!!!!!!!!!!");
+        //});
 
     }
 
@@ -109,7 +181,10 @@ public class UIPanel extends Composite {
                         //Window.alert("i: " + i+ " dsff " + oracle.toString());
                     }
                     sbCountry.refreshSuggestionList();
-                    sbCountry.showSuggestionList();
+                    if ((responceState.getCountrys().length > 1) ||
+                            (responceState.getCountrys().length == 1 & (responceState.getCountrys())[0] != uIContent.getCountry())) {
+                        sbCountry.showSuggestionList();
+                    }
                     //Window.alert("sbCountry.getValue: " +sbCountry.getValue());
                 }
                 else if (uiActor == "City"){
@@ -119,7 +194,10 @@ public class UIPanel extends Composite {
                         oracle.add(i);
                     }
                     sbCity.refreshSuggestionList();
-                    sbCity.showSuggestionList();
+                    if ((responceState.getCitys().length > 1) ||
+                            (responceState.getCitys().length == 1 & (responceState.getCitys())[0] != uIContent.getCity())) {
+                        sbCity.showSuggestionList();
+                    }
                 }
                 else if (uiActor == "Bank"){
                     MultiWordSuggestOracle oracle = (MultiWordSuggestOracle)sbBank.getSuggestOracle();
@@ -128,29 +206,14 @@ public class UIPanel extends Composite {
                         oracle.add(i);
                     }
                     sbBank.refreshSuggestionList();
-                    sbBank.showSuggestionList();
-                }
-                gPoint.clear();
-                if (responceState.getPoints().size()>0){
-                    gPoint.resize(responceState.getPoints().size()+1, 4);
-                    gPoint.setText(0, 0 , "Адрес ");
-                    gPoint.setText(0, 1 , "Страна");
-                    gPoint.setText(0, 2 , "Город");
-                    gPoint.setText(0, 3 , "Банк");
-                    gPoint.setText(0, 0 , "11111");
-                    for (int i1 = 0; i1 < responceState.getPoints().size(); i1++){
-                        gPoint.setText(0, 0 , "33333");
-                        List<String[]> eee = responceState.getPoints();
-                        gPoint.setText(0, 1 , "4444");
-                        String[] sTemp = eee.get(i1);
-                        gPoint.setText(0, 2 , "5555");
-                        gPoint.setText(i1+1, 0 , "gfhfg");
-                        gPoint.setText(i1+1, 1 , sTemp[1]);
-                        gPoint.setText(i1+1, 2 , sTemp[2]);
-                        gPoint.setText(i1+1, 3 , sTemp[3]);
+                    if ((responceState.getBanks().length > 1) ||
+                            (responceState.getBanks().length == 1 & (responceState.getBanks())[0] != uIContent.getBank())) {
+                        sbBank.showSuggestionList();
                     }
-                    gPoint.setText(2, 3 , "54654");
                 }
+                selectIndexGrid = -1;
+                drawGrid();
+
             /*
                 dialogBox.setText("Remote Procedure Call");
                 serverResponseHtml.removeStyleName("serverResponseLabelError");
@@ -161,4 +224,38 @@ public class UIPanel extends Composite {
             }
         });
     }
+
+    private void drawGrid(){
+        gPoint.clear();
+        if (responceState.getPoints().size()>0){
+            gPoint.resize(responceState.getPoints().size()+1, 4);
+            gPoint.setText(0, 0 , "Адрес ");
+            gPoint.setText(0, 1 , "Страна");
+            gPoint.setText(0, 2 , "Город");
+            gPoint.setText(0, 3 , "Банк");
+            gPoint.getRowFormatter().setStyleName(0,style.tableCellCap());
+            for (int i = 0; i < responceState.getPoints().size(); i++){
+                PointEntity pointEntity = responceState.getPoints().get(i);
+                gPoint.setText(i+1, 0 , pointEntity.getAddress());
+                gPoint.setText(i+1, 1 , pointEntity.getCountry());
+                gPoint.setText(i+1, 2 , pointEntity.getCity());
+                gPoint.setText(i+1, 3 , pointEntity.getBank());
+                if ((i % 2) == 0) {
+                    gPoint.getRowFormatter().setStyleName(i+1,style.tableCellEven());
+                } else {
+                    gPoint.getRowFormatter().setStyleName(i+1,  style.tableCellOdd());
+                }
+
+                if (i+1 == selectIndexGrid) {
+                    gPoint.getRowFormatter().addStyleName(i+1,style.tableCellSelect());
+                    //gPoint.getRowFormatter().setStylePrimaryName(i+1, style.tableCellSelect());
+                    //gPoint.getRowFormatter().setStyleName(i+1,style.tableCellSelect());
+                }
+            }
+        }
+        else {
+            gPoint.resize(0,0);
+        }
+    }
 }
+

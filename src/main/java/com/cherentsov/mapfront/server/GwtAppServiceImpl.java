@@ -1,6 +1,7 @@
 package com.cherentsov.mapfront.server;
 
 import com.cherentsov.mapfront.client.GwtServiceIntf;
+import com.cherentsov.mapfront.shared.PointEntity;
 import com.cherentsov.mapfront.shared.ResponceState;
 import com.cherentsov.mapfront.shared.UIContent;
 import com.google.gson.Gson;
@@ -83,16 +84,11 @@ public class GwtAppServiceImpl {
         }
         ArrayList<String[]> alPoints = new ArrayList(Arrays.asList(mPoint));
 */
-        ArrayList<String[]> alPoints = new ArrayList();
+        ArrayList<PointEntity> alPoints = new ArrayList();
         for (int i = 0; i< points.size(); i++){
             ArrayList pt = (ArrayList) points.get(i);
-            String[] mPoint = new String[6];
-            mPoint[0] = (String)pt.get(0);
-            mPoint[1] = (String)pt.get(1);
-            mPoint[2] = (String)pt.get(2);
-            mPoint[3] = (String)pt.get(3);
-            mPoint[4] = (String)pt.get(4);
-            mPoint[5] = (String)pt.get(5);
+            PointEntity mPoint = new PointEntity((String)pt.get(0), (String)pt.get(1), (String)pt.get(2), (String)pt.get(3),
+                    (String)pt.get(4),(String)pt.get(5));
             alPoints.add(mPoint);
         }
 
@@ -109,13 +105,8 @@ public class GwtAppServiceImpl {
             System.out.println(" ");
         }*/
         System.out.println("alPoints "+alPoints.size() + ":___ ");
-        for (String[] i: alPoints
-        ) {
-            for (String r:i
-            ) {
-                System.out.print(r+" ");
-            }
-            System.out.println(" ");
+        for (PointEntity i: alPoints) {
+            System.out.println(i.toString());
         }
 
         ResponceState responceState = new ResponceState(saCountrys, saCities, saBanks, alPoints);

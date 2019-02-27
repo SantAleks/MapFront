@@ -7,11 +7,11 @@ public class ResponceState {
     private String[] banks;
     private String[] citys;
     private String[] countrys;
-    private List<String[]> points;
+    private List<PointEntity> points;
 
     public ResponceState() {
     }
-    public ResponceState(String[] countrys, String[] citys, String[] banks, List<String[]> points) {
+    public ResponceState(String[] countrys, String[] citys, String[] banks, List<PointEntity> points) {
         this.countrys = countrys;
         this.citys = citys;
         this.banks = banks;
@@ -42,11 +42,11 @@ public class ResponceState {
         this.banks = banks;
     }
 
-    public List<String[]> getPoints() {
+    public List<PointEntity> getPoints() {
         return points;
     }
 
-    public void setPoints(List<String[]> points) {
+    public void setPoints(List<PointEntity> points) {
         this.points = points;
     }
 }

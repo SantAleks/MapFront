@@ -40,6 +40,8 @@ public class UIPanel extends Composite {
     @UiField
     Grid gPoint;
     @UiField MyStyle style;
+    @UiField
+    HTMLPanel mapPanel;
 
     private int selectIndexGrid = -1;
 
@@ -86,7 +88,11 @@ public class UIPanel extends Composite {
 
     public UIPanel() {
         initWidget(ourUiBinder.createAndBindUi(this));
+        topHorizontalPanel.setCellWidth(srchVerticalPanel,"150px");
+        topHorizontalPanel.setCellWidth(srchVerticalPanelPoint,"100%");
+        topHorizontalPanel.setCellWidth(mapPanel,"600px");
 
+        MapInit();
         //web.setText("dfgfdgfgdffd");
         //mapTextBox.getElement().setAttribute("placeholder", "Add a todo item");
 
@@ -135,6 +141,7 @@ public class UIPanel extends Composite {
 
 
         gPoint.addClickHandler(event -> {
+            allert("dsfdsfsd");
             selectIndexGrid = gPoint.getCellForEvent(event).getRowIndex();
             drawGrid();
 
@@ -148,6 +155,56 @@ public class UIPanel extends Composite {
         //});
 
     }
+    public static native void MapInit() /*-{
+        //$wnd.alert(msg);
+        // Функция ymaps.ready() будет вызвана, когда
+        // загрузятся все компоненты API, а также когда будет готово DOM-дерево.
+        //var
+        ymaps = $wnd.ymaps;
+        ymaps.ready(init);
+        function init(){
+            // Создание карты.
+            myMap = new ymaps.Map("yandexMap", {
+                // Координаты центра карты.
+                // Порядок по умолчанию: «широта, долгота».
+                // Чтобы не определять координаты центра карты вручную,
+                // воспользуйтесь инструментом Определение координат.
+                center: [55.76, 37.64],
+                // Уровень масштабирования. Допустимые значения:
+                // от 0 (весь мир) до 19.
+                zoom: 7
+            });
+        }
+
+    }-*/;
+
+    public static native void allert(String msg) /*-{
+        //myMap.setCenter([50.76, 31.64]);
+        myMap.panTo([50.76, 31.64], {
+            // Задержка между перемещениями.
+            delay: 1500
+        });
+
+        //$wnd.alert(msg);
+        // Функция ymaps.ready() будет вызвана, когда
+        // загрузятся все компоненты API, а также когда будет готово DOM-дерево.
+        //var ymaps = $wnd.ymaps;
+        //ymaps.ready(init);
+        //function init(){
+            // Создание карты.
+         //   var myMap = new ymaps.Map("yandexMap", {
+                // Координаты центра карты.
+                // Порядок по умолчанию: «широта, долгота».
+                // Чтобы не определять координаты центра карты вручную,
+                // воспользуйтесь инструментом Определение координат.
+         //       center: [55.76, 37.64],
+                // Уровень масштабирования. Допустимые значения:
+                // от 0 (весь мир) до 19.
+          //      zoom: 7
+          //  });
+        //}
+
+    }-*/;
 
     private void sendInfoToServer(final String uiActor) {
 

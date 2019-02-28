@@ -76,7 +76,7 @@
     </ui:style>
     <g:HTMLPanel>
         <g:HorizontalPanel ui:field="topHorizontalPanel" width="100%">
-            <g:VerticalPanel ui:field="srchVerticalPanel" width="100%">
+            <g:VerticalPanel ui:field="srchVerticalPanel" width="150px">
                 <g:Label text="Страна:" styleName="{style.label}"/>
                 <g:SuggestBox ui:field="sbCountry"  styleName="{style.suggestBox}"/>
                 <g:Label text="Город:" styleName="{style.label}"/>
@@ -85,10 +85,13 @@
                 <g:SuggestBox ui:field="sbBank"  styleName="{style.suggestBox}"/>
             </g:VerticalPanel>
             <g:VerticalPanel ui:field="srchVerticalPanelPoint" width="100%">
-                <g:Label text="Найденые пункты:" styleName="{style.label}"/>
-                <g:Grid ui:field="gPoint"/>
+                <g:Label text="Найденые пункты:" width="100%" styleName="{style.label}"/>
+                <g:Grid ui:field="gPoint" width="100%"/>
             </g:VerticalPanel>
-            <g:Label text="MAP" styleName="{style.second}"/>
+            <g:HTMLPanel ui:field="mapPanel" width="600px">
+                Карта:
+                <div id="yandexMap" style="width: 600px; height: 400px"></div>
+            </g:HTMLPanel>
         </g:HorizontalPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

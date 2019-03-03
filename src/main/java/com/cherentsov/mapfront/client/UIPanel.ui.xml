@@ -1,23 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style type='com.cherentsov.mapfront.client.UIPanel.MyStyle'>
-        .pretty {
-            color: magenta;
-            background-color: Skyblue;
-            margin: 2px
-        }
-
-        .second {
-            color: red;
-            background-color: darkcyan;
-            margin: 2px
-        }
-
-        .third {
-            color: green;
-            background-color: darkorchid;
-            margin: 2px
-        }
 
         .label {
             color: black;
@@ -32,15 +15,6 @@
             color: black;
             background-color: lightcyan;
             margin: 2px
-        }
-
-        .grid {
-            width: 150px;
-            height: 50px;
-            padding: 5px;
-            position: absolute;
-            left: 220px;
-            top: 350px;
         }
 
         .tableCell-cap {
@@ -66,13 +40,6 @@
             border: 1px solid #000000;
         }
 
-        .panel {
-            background-color: #C3D9FF;
-            border: 1px solid #000000;
-            padding: 3px;
-            margin: 3px;
-            font-weight: normal;
-        }
     </ui:style>
     <g:HTMLPanel>
         <g:HorizontalPanel ui:field="topHorizontalPanel" width="100%">

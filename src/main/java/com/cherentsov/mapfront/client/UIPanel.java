@@ -4,7 +4,6 @@ import com.cherentsov.mapfront.shared.PointEntity;
 import com.cherentsov.mapfront.shared.ResponceState;
 import com.cherentsov.mapfront.shared.UIContent;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -13,40 +12,20 @@ import com.google.gwt.user.client.ui.*;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
 
-import java.util.List;
-
 public class UIPanel extends Composite {
 
-    @UiField
-    HorizontalPanel topHorizontalPanel;
-    @UiField
-    VerticalPanel srchVerticalPanel;
-    @UiField
-    VerticalPanel srchVerticalPanelPoint;
-    /*
-    @UiField
-    TextBox mapTextBox;
-    @UiField
-    Label web;
-    @UiField
-    Button wButton;
-    */
-    @UiField
-    SuggestBox sbCountry;
-    @UiField
-    SuggestBox sbCity;
-    @UiField
-    SuggestBox sbBank;
-    @UiField
-    Grid gPoint;
+    @UiField HorizontalPanel topHorizontalPanel;
+    @UiField VerticalPanel srchVerticalPanel;
+    @UiField VerticalPanel srchVerticalPanelPoint;
+    @UiField SuggestBox sbCountry;
+    @UiField SuggestBox sbCity;
+    @UiField SuggestBox sbBank;
+    @UiField Grid gPoint;
     @UiField MyStyle style;
-    @UiField
-    HTMLPanel mapPanel;
+    @UiField HTMLPanel mapPanel;
 
     private int selectIndexGrid = -1;
-
     private final GwtServiceIntf gwtAppService = GWT.create(GwtServiceIntf.class);
-
     private ResponceState responceState;
     private UIContent uIContent = new UIContent("","","");
 
@@ -54,16 +33,8 @@ public class UIPanel extends Composite {
     }
 
     interface MyStyle extends CssResource {
-        //String enabled();
-        //String disabled();
-
-        String pretty();
-
-        String third();
 
         String suggestBox();
-
-        String grid();
 
         @ClassName("tableCell-even")
         String tableCellEven();
@@ -72,10 +43,6 @@ public class UIPanel extends Composite {
 
         @ClassName("tableCell-odd")
         String tableCellOdd();
-
-        String panel();
-
-        String second();
 
         @ClassName("tableCell-cap")
         String tableCellCap();
@@ -92,14 +59,11 @@ public class UIPanel extends Composite {
         topHorizontalPanel.setCellWidth(srchVerticalPanelPoint,"100%");
         topHorizontalPanel.setCellWidth(mapPanel,"600px");
 
-        MapInit();
-        //web.setText("dfgfdgfgdffd");
-        //mapTextBox.getElement().setAttribute("placeholder", "Add a todo item");
+        mapInit();
 
         sbCountry.addKeyUpHandler(event -> {
             if (uIContent.getCountry() != sbCountry.getValue()){
                 uIContent.setCountry(sbCountry.getValue());
-                //Window.alert("contry");
                 sendInfoToServer("Country");
             }
         });
@@ -141,90 +105,64 @@ public class UIPanel extends Composite {
 
 
         gPoint.addClickHandler(event -> {
-            allert("dsfdsfsd");
             selectIndexGrid = gPoint.getCellForEvent(event).getRowIndex();
             drawGrid();
-
-            //gPoint.getCellForEvent(event);
-            //Window.alert("getX: " + event.getX() + " getClientX: " + gPoint.getCellForEvent(event).getRowIndex());
-
+            if (selectIndexGrid >=1){
+                PointEntity selPoint =  responceState.getPoints().get(selectIndexGrid-1);
+                centrMap(selPoint.getxCoor(), selPoint.getyCoor());
+            }
         });
-
-        //wButton.addClickHandler(event -> {
-        //    web.setText("!!!!!!!!!!!!!");
-        //});
-
     }
-    public static native void MapInit() /*-{
+
+    public static native void addPlacemark(String bank, String addr, String xCoor, String yCoor) /*-{
+        MyGeoObjectCollection.add($wnd.makePlacemark(bank, addr, parseFloat(xCoor), parseFloat(yCoor)));
+    }-*/;
+
+    public static native void clearCollection() /*-{
+        MyGeoObjectCollection.removeAll();
+    }-*/;
+
+    public static native void mapInit() /*-{
         //$wnd.alert(msg);
         // Функция ymaps.ready() будет вызвана, когда
         // загрузятся все компоненты API, а также когда будет готово DOM-дерево.
-        //var
-        ymaps = $wnd.ymaps;
-        ymaps.ready(init);
+        ymaps1 = $wnd.ymaps;
+        ymaps1.ready(init);
         function init(){
             // Создание карты.
-            myMap = new ymaps.Map("yandexMap", {
+            myMap = new ymaps1.Map("yandexMap", {
                 // Координаты центра карты.
                 // Порядок по умолчанию: «широта, долгота».
                 // Чтобы не определять координаты центра карты вручную,
                 // воспользуйтесь инструментом Определение координат.
-                center: [55.76, 37.64],
+                center: [54.8609, 83.084],
                 // Уровень масштабирования. Допустимые значения:
                 // от 0 (весь мир) до 19.
-                zoom: 7
+                zoom: 10
+            }, {
+                searchControlProvider: 'yandex#search'
             });
+            MyGeoObjectCollection = new ymaps1.GeoObjectCollection({}, {
+                preset: 'islands#darkOrangeStretchyIcon'});
+            myMap.geoObjects.add(MyGeoObjectCollection);
         }
-
     }-*/;
 
-    public static native void allert(String msg) /*-{
-        //myMap.setCenter([50.76, 31.64]);
-        myMap.panTo([50.76, 31.64], {
+    public static native void centrMap(String xCoor, String yCoor) /*-{
+        myMap.panTo([parseFloat(xCoor), parseFloat(yCoor)], {
             // Задержка между перемещениями.
             delay: 1500
         });
-
-        //$wnd.alert(msg);
-        // Функция ymaps.ready() будет вызвана, когда
-        // загрузятся все компоненты API, а также когда будет готово DOM-дерево.
-        //var ymaps = $wnd.ymaps;
-        //ymaps.ready(init);
-        //function init(){
-            // Создание карты.
-         //   var myMap = new ymaps.Map("yandexMap", {
-                // Координаты центра карты.
-                // Порядок по умолчанию: «широта, долгота».
-                // Чтобы не определять координаты центра карты вручную,
-                // воспользуйтесь инструментом Определение координат.
-         //       center: [55.76, 37.64],
-                // Уровень масштабирования. Допустимые значения:
-                // от 0 (весь мир) до 19.
-          //      zoom: 7
-          //  });
-        //}
-
     }-*/;
 
     private void sendInfoToServer(final String uiActor) {
-
-
-        //UIContent uicRequest = new UIContent("Казахст", "ово","ВТБ");
         UIContent uicRequest = new UIContent(sbCountry.getValue(), sbCity.getValue(),sbBank.getValue());
 
 
         gwtAppService.gwtCallServer(uicRequest, new MethodCallback<ResponceState>() {
             @Override
             public void onFailure(final Method method, final Throwable exception) {
-                Window.alert("Error");
-                /*
-                dialogBox.setText("Remote Procedure Call - Failure");
-                serverResponseHtml.addStyleName("serverResponseLabelError");
-                //serverResponseHtml.setHTML("ERROR ON SERVER");
-                serverResponseHtml.setHTML(" " + method.getResponse().getStatusCode() + " ____ "+ method.getResponse().getHeadersAsString() + " ____ " + method.getResponse().getText());
-
-                dialogBox.center();
-                closeButton.setFocus(true);*/
+                Window.alert("Ошибка. Сервер предоставления данных справочника не работает.");
             }
 
             @Override
@@ -235,14 +173,12 @@ public class UIPanel extends Composite {
                     oracle.clear();
                     for (String i : responceState.getCountrys()){
                         oracle.add(i);
-                        //Window.alert("i: " + i+ " dsff " + oracle.toString());
                     }
                     sbCountry.refreshSuggestionList();
                     if ((responceState.getCountrys().length > 1) ||
                             (responceState.getCountrys().length == 1 & (responceState.getCountrys())[0] != uIContent.getCountry())) {
                         sbCountry.showSuggestionList();
                     }
-                    //Window.alert("sbCountry.getValue: " +sbCountry.getValue());
                 }
                 else if (uiActor == "City"){
                     MultiWordSuggestOracle oracle = (MultiWordSuggestOracle)sbCity.getSuggestOracle();
@@ -270,14 +206,10 @@ public class UIPanel extends Composite {
                 }
                 selectIndexGrid = -1;
                 drawGrid();
-
-            /*
-                dialogBox.setText("Remote Procedure Call");
-                serverResponseHtml.removeStyleName("serverResponseLabelError");
-                serverResponseHtml.setHTML(result.getBanks()[0]);
-                dialogBox.center();
-                closeButton.setFocus(true);
-            */
+                clearCollection();
+                for (PointEntity i:responceState.getPoints()) {
+                    addPlacemark(i.getBank(), i.getAddress(), i.getxCoor(), i.getyCoor());
+                }
             }
         });
     }
@@ -305,8 +237,6 @@ public class UIPanel extends Composite {
 
                 if (i+1 == selectIndexGrid) {
                     gPoint.getRowFormatter().addStyleName(i+1,style.tableCellSelect());
-                    //gPoint.getRowFormatter().setStylePrimaryName(i+1, style.tableCellSelect());
-                    //gPoint.getRowFormatter().setStyleName(i+1,style.tableCellSelect());
                 }
             }
         }

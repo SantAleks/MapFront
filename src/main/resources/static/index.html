@@ -34,24 +34,17 @@
     </div>
 </noscript>
 <h1 id="helloId" style="font-weight: bold; text-align: center">Тестовая работа для ЦФТ</h1>
-<!--
-<h1 id="helloId" style="text-align: center"></h1>
 
-<table align="center">
-    <tr>
-        <td colspan="2" style="font-weight: bold; text-align: center">First GWT Application</td>
-    </tr>
-    <tr>
-        <td id="usernameLabelId"></td>
-        <td id="usernameId"></td>
-    </tr>
-    <tr>
-        <td id="confirmButtonId"></td>
-    </tr>
-    <tr>
-        <td colspan="2" style="color:red;" id="errorLabelContainer"></td>
-    </tr>
-</table>
--->
+<script type="text/javascript">
+    function makePlacemark(bank, addr, xCo, yCo) {
+        var myPlacemark = new ymaps.Placemark([xCo, yCo], {
+            balloonContent: addr,
+            iconContent: bank
+        }, {
+            preset: 'islands#darkOrangeStretchyIcon',
+        });
+        return myPlacemark;
+    }
+</script>
 </body>
 </html>

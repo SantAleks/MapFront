@@ -13,19 +13,6 @@ public class UIContent {
         this.bank = bank;
     }
 
-    /*public static UIContent valueOf(String stIn){
-        String[] tempIn = stIn.split("\\|");
-        String bank = "";
-        String city = "";
-        if (tempIn.length > 0) {
-            bank = tempIn[0];
-        }
-        if (tempIn.length > 1) {
-            city = tempIn[1];
-        }
-        return new UIContent(bank, city);
-    }*/
-
     public String getCountry() {
         return country;
     }
@@ -49,13 +36,5 @@ public class UIContent {
     public void setBank(String bank) {
         this.bank = bank;
     }
-/*
-    @Override
-    public String toString() {
-        /*return "UIContent{" +
-                "Bank='" + Bank + '\'' +
-                ", City='" + City + '\'' +
-                '}';*/
-  /*      return ""+ Bank+"|"+City;
-    }*/
+
 }

@@ -1,5 +1,8 @@
 package com.cherentsov.mapfront.shared;
 
+import java.util.Objects;
+
+//Сущность, для хранения информации об одном банковском пункте
 public class PointEntity {
     private String address;
     private String country;
@@ -9,6 +12,8 @@ public class PointEntity {
     private String yCoor;
 
     public PointEntity(){}
+
+
 
     public PointEntity(String address, String country, String city, String bank, String xCoor, String yCoor) {
         this.address = address;
@@ -77,5 +82,22 @@ public class PointEntity {
                 ", xCoor='" + xCoor + '\'' +
                 ", yCoor='" + yCoor + '\'' +
                 '}';
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PointEntity that = (PointEntity) o;
+        return Objects.equals(address, that.address) &&
+                Objects.equals(country, that.country) &&
+                Objects.equals(city, that.city) &&
+                Objects.equals(bank, that.bank) &&
+                Objects.equals(xCoor, that.xCoor) &&
+                Objects.equals(yCoor, that.yCoor);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(address, country, city, bank, xCoor, yCoor);
     }
 }

@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +16,19 @@ import java.util.ArrayList;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-@PropertySource("application.properties")
+@PropertySource("classpath:application.properties")
 public class GwtAppServiceImpl {
     private String port;
-    public String ip;
+    private String ip;
     private static final Log logger = LogFactory.getLog(GwtAppServiceImpl.class);
 
+    @Bean
+    public RestTemplate restTemplateBean() {
+        return new RestTemplate();
+    }
+
+    @Autowired
+    RestTemplate restTemplate;
     @Autowired
     public void setPort(@Value("${backend.port}")String port) {
         this.port = port;
@@ -30,14 +38,27 @@ public class GwtAppServiceImpl {
         this.ip = ip;
     }
 
+    public String getPort() {
+        return port;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
     @RequestMapping(value = "/gwtApp/gwtAppService", method = PUT)
     public ResponseEntity<ResponceState> getTodoItems(@RequestBody final UIContent containingText) {
         logger.debug("Входной запрос: " + containingText);
 
-        String uri = "http://" + ip + ":" + port + "/map?co=" + containingText.getCountry() + "&ci="
-                + containingText.getCity() + "&ba=" + containingText.getBank()+ "&fc=co";
-        RestTemplate restTemplate = new RestTemplate();
-        String result = restTemplate.getForObject(uri, String.class);
+        //Чистим входные данные от возможных инъекций и формируем запрос к Бэкэнду
+        StringBuilder uri = new StringBuilder("http://");
+        uri.append(ip).append(":").append(port).append("/map?co=");
+        uri.append(containingText.getCountry().replaceAll("\\p{P}|\\p{S}", "")).append("&ci=");
+        uri.append(containingText.getCity().replaceAll("\\p{P}|\\p{S}", "")).append("&ba=");
+        uri.append(containingText.getBank().replaceAll("\\p{P}|\\p{S}", "")).append("&fc=co");
+
+        //RestTemplate restTemplate = new RestTemplate();
+        String result = restTemplate.getForObject(uri.toString(), String.class);
         logger.debug("Результат запроса к бэкэнду: " + result);
 
         Gson gson = new Gson();
@@ -45,7 +66,7 @@ public class GwtAppServiceImpl {
         logger.debug("Распаковка Json: " + arJson);
 
         Object[] arTemp = arJson.toArray();
-        logger.debug("arTemp.length: " + arTemp.length);
+        logger.debug("Количество сущностей в ответе от бэкенда: " + arTemp.length);
 
         ArrayList<String> countrys = (ArrayList)arTemp[0];
         String[] saCountrys = countrys.toArray(new String[countrys.size()]);;

@@ -1,7 +1,7 @@
 package com.cherentsov.mapfront.shared;
 
 import java.util.List;
-
+//Сущность, используемая для хранения ответа от вэб-приложения к GWT
 public class ResponceState {
     private String[] banks;
     private String[] citys;
